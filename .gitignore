@@ -39,15 +39,14 @@ ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 
+.husky/
 .vscode/
 config/
 .eslintignore
 .forceignore
 .prettierignore
 .prettierrc
-package.json
-sfdx-project.json
-manifest/
+jest.config.js
 
 # Local environment variables
 .env
