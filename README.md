@@ -33,24 +33,24 @@ BoatReview—Comments on and ratings of boats. This object has a master-detail r
 Entity Diagram
 From Setup, enter Schema Builder in the Quick Find box, then select Schema Builder to view an interactive version of the image. For more information, see the Work with Schema Builder unit in the Data Modeling module.
 
-https://developer.salesforce.com/files/superbadge_lcf/prework_entity_diagram.jpg
+Entity diagram. Boat Type object linked to the Boat object (Field Boat Type, Lookup); BoatReview linked to Boat (Field Boat, Master-Detail); User linked to Boat (CreatedBy, lookup; LastModifiedBy, lookup); Contact linked to Boat (Field Contact, Master-Detail)
 
 Application Design
 The time you spent meeting with key HowWeRoll stakeholders was worthwhile; the team came up with the following blueprint for the Lightning page. First, the Gallery:
 
-https://developer.salesforce.com/files/superbadge_lwc/design_gallery.jpg
+Friend Ships main page, showing the search form on the top, the Gallery on the bottom left of the page, record details on the top right of the page, Current Boat Location right below it, on the bottom right side of the page. The active tab is the Gallery.
 
 Here is the Boats Near Me tab view. The map on the left shows a list of boats based on the current user’s location. The map on the right shows the currently selected boat's location. You will also reuse the boatMap component on the Boat record's page.
 
-https://developer.salesforce.com/files/superbadge_lwc/design_boats_near_me.jpg
+Friend Ships main page, showing the Boats Near Me tab, with 10 map marks distributed across the North America map, showing maps in Mexico, the United States and Canada. The active tab is Boats Near Me.
 
 Then the Boat Editor tab, a Lightning data table lets you edit multiple records at once.
 
-https://developer.salesforce.com/files/superbadge_lwc/design_boat_editor.jpg
+Friend Ships main page, showing the Boat Editor tab, with a list of boats, filtered by Type, where the user can edit several records at once. The active tab is the Boat Editor.
 
 You also need to build a component for the Boat Reviews and Rating System, as shown.
 
-https://developer.salesforce.com/files/superbadge_lwc/designer_reviews.jpg
+Two screenshots, side by side. On the left, the Add Review component, showing a review ready to be saved. On the right, the Reviews tab, showing the details about the review after it was saved, in read-only mode.
 
 After assessing the task ahead, you guzzle a cup of coffee, or your preferred beverage, and decide that the best way to conquer this project is to break it into smaller pieces. You plan out the following phases which, when completed, result in a solid finished product.
 
@@ -67,37 +67,32 @@ Deploy the message channel (below) to your org so you can reference it in Lightn
 <LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>This is a sample Lightning Message Channel for the Lightning Web Components Superbadge.</description>
     <isExposed>true</isExposed>
-    <lightningMessageFields><description>This is the record Id that changed</description>
+    <lightningMessageFields>
+        <description>This is the record Id that changed</description>
         <fieldName>recordId</fieldName>
     </lightningMessageFields>
     <masterLabel>BoatMessageChannel</masterLabel>
 </LightningMessageChannel>
-
-Copy
-
 Use BOATMC for the name of your imported message channel inside the JavaScript files.
 
-// imports
-// { functions, context, scope }
+// imports 
+// { functions, context, scope } 
 import { ..., ..., ... } from 'lightning/messageService';
 import BOATMC from '@salesforce/...';
-
-Copy
-
 Let’s Sail Away!
 The boat is safer anchored at the port, but that’s not the aim of boats. Let’s sail away! A journey of a million nautical miles begins with a single line of code, right?
 
 Get your motor running by displaying a form with a dropdown that lists each boat type, along with a New Boat button.
 
-https://developer.salesforce.com/files/superbadge_lwc/sailaway_5_1.jpg
+Main screen, divided into five different sections. 1. Find a Boat. 2. Search Results. 3. Boat Tile. 4. Record details plus reviews. 5. Current boat location.
 
 Figure: Building the components. Main screen, divided into five different sections. 1. Find a Boat. 2. Search Results. 3. Boat Tile. 4. Record details and boat reviews. 5. Current boat location.
 
-https://developer.salesforce.com/files/Seach_Results_Tabs.png
+Figure: Building the Search Results. The first tab shows the Gallery. The second tab shows the Boat Editor. The third tab shows the Boats Near Me.
 
 Figure: Building the Search Results. The first tab shows the Gallery. The second tab shows the Boat Editor. The third tab shows the Boats Near Me.
 
-https://developer.salesforce.com/files/RecordDetailsAndBoatReviews.png
+Figure: Building the Record details and boat reviews. The first tab shows the Details. The second tab shows the a message if there are no reviews available, or a list of reviews for a given boat. The third tab shows the Add Review.
 
 Figure: Building the Record details and boat reviews. The first tab shows the Details. The second tab shows the a message if there are no reviews available, or a list of reviews for a given boat. The third tab shows the Add Review.
 
@@ -106,19 +101,20 @@ To build the form and the page, create all the required components. Each section
 Friend Ships Lightning Page
 First, create a Lightning app page named Friend Ships that uses the Main Region and Right Sidebar layout. Put the component boatSearch in the main region and activate the page. In this project you won’t need to add this Lightning app page to any existing app or mobile navigation.
 
+Note
+Note
+Create and test the components in this new Lightning page. Although each challenge step will evaluate different component's code, we will only assess if the entire Friend Ships Lightning page meets the requirements in the 'Build the Friend Ships Lightning Page with all the components' challenge.
+
 Then, in the App Manager, create a new Lightning app named Friend Ships (API name: Friend_Ships) that’s directly accessible via its URL. Use standard navigation style with support to desktop and mobile. Add the Friend Ships page to the app as a Navigation Item.
 
 Lastly, grant access to the following profiles: System Administrator and Standard User.
 
 This configuration must result in the creation of the following objects.
 
-Untitled
-
-https://res.cloudinary.com/hy4kyit2a/image/upload/doc/trailhead/en-usb473bb5ea1b7e61dfb07e6a7e547de6b.gif
-
-Note
-Create and test the components in this new Lightning page. Although each challenge step will evaluate different component's code, we will only assess if the entire Friend Ships Lightning page meets the requirements in the 'Build the Friend Ships Lightning Page with all the components' challenge.
-
+Object Type	Object Label
+Lightning App	Friend Ships
+Lightning Page	Friend Ships
+Custom Tab Definition	Friend Ships
 Build the Search Form and Add It to a New Lightning Page
 The boatSearch component is a container component that invokes both the boatSearchForm and boatSearchResults. It contains a <lightning-layout> with multiple rows, including a <lightning-layout-item> with size equals to 12 on the top, a <lightning-card> with the title "Find a Boat", and another <lightning-layout-item> with size equals to 12 on the bottom.
 
@@ -129,7 +125,8 @@ Show the spinner while the form is loading the boats. Use the attribute isLoadin
 The component boatSearch must also have a button to create a new boat. To keep the design simple to use and maintain, Byanca requested you use a <lightning-button> inside a slot called actions. Label it New Boat and invoke a function named createNewBoat() that uses the NavigationMixin extension to open a standard form so the user can create a new boat record.
 
 Markup (boatSearch.html)
-<template><lightning-layout multiple-rows>
+<template>
+  <lightning-layout multiple-rows>
     <!-- Top -->
     <lightning-layout-item size="12">
       <lightning-card title="Find a Boat">
@@ -147,35 +144,29 @@ Markup (boatSearch.html)
     </lightning-layout-item>
   </lightning-layout>
 </template>
-
-Copy
-
 JavaScript file (boatSearch.js)
 Make sure to use the correct decorators for the attributes.
 
  // imports
 export default class BoatSearch extends LightningElement {
   isLoading = false;
-
+  
   // Handles loading event
-handleLoading() { }
-
+  handleLoading() { }
+  
   // Handles done loading event
-handleDoneLoading() { }
-
+  handleDoneLoading() { }
+  
   // Handles search boat event
   // This custom event comes from the form
-searchBoats(event) { }
-
-createNewBoat() { }
+  searchBoats(event) { }
+  
+  createNewBoat() { }
 }
-
-Copy
-
 Boat Search Form
 The boatSearchForm is a component that lets users filter results by boat type using a <lightning-combobox> menu. The menu is middle-aligned, with text left-aligned and uses standard SLDS styling. An empty string is both the first and default value. Label this first value All Types.
 
-https://developer.salesforce.com/files/superbadge_lwc/find_a_boat.jpg
+Component boatSearchForm, with the title equal to Find a Boat, a dropdown box in the middle for the boat types, and a button on the upper right corner of the component, with the label equal to New Boat. The button is white, and the text is blue.
 
 According to Byanca Gowda, the Salesforce architect at HowWeRoll, the boat types can be retrieved through an Apex method called getBoatTypes(), from the BoatDataService class. It’s important to fix the declaration of some methods in this class so they can be referenced by Lightning web components.
 
@@ -188,28 +179,26 @@ Complete the boatTypes function’s logic to populate the map, returning the typ
 The newly created custom event search must cause the application to query for the boats.
 
 Markup (boatSearchForm.html)
-<template><lightning-layout>
+<template>
+  <lightning-layout>
     <lightning-layout-item class="slds-align-middle">
       <lightning-combobox class="slds-align-middle"></lightning-combobox>
     </lightning-layout-item>
   </lightning-layout>
 </template>
-
-Copy
-
 JavaScript file (boatSearchForm.js)
 // imports
 // import getBoatTypes from the BoatDataService => getBoatTypes method';
 export default class BoatSearchForm extends LightningElement {
   selectedBoatTypeId = '';
-
+  
   // Private
   error = undefined;
-
+  
   searchOptions;
-
+  
   // Wire a custom Apex method
-boatTypes({ error, data }) {
+    boatTypes({ error, data }) {
     if (data) {
       this.searchOptions = data.map(type => {
         // TODO: complete the logic
@@ -220,19 +209,16 @@ boatTypes({ error, data }) {
       this.error = error;
     }
   }
-
+  
   // Fires event that the search option has changed.
   // passes boatTypeId (value of this.selectedBoatTypeId) in the detail
-handleSearchOptionChange(event) {
+  handleSearchOptionChange(event) {
     // Create the const searchEvent
     // searchEvent must be the new custom event search
     searchEvent;
     this.dispatchEvent(searchEvent);
   }
 }
-
-Copy
-
 Next, begin displaying filtered and unfiltered search results in a responsive layout.
 
 Populate the Search Results and Search Filter
@@ -240,7 +226,7 @@ It’s time to start showing off pictures of our boats. By the end of this phase
 
 boatSearchResults is the container component for all the boats in the Gallery, Boats Near Me, and Boat Editor sections. Recall that Boat Editor is a Lightning DataTable used to edit several records at once. You build it during this project.
 
-https://developer.salesforce.com/files/superbadge_lwc/find_a_boat_tile.jpg
+The image shows the form, with the select boat type being Jet Ski, and the gallery showing four tiles, each one with a different jet ski record. The first tile on the gallery is selected. The active tab is Gallery.
 
 This component lets the user perform different actions, so make sure it does the following.
 
@@ -271,35 +257,30 @@ The boat price must use a Lightning formatted number, with a maximum of two frac
 The boat length must be in a <div> that uses the slds-text-body_small class.
 The boat type must be in a <div> that uses the slds-text-body_small class.
 Markup (boatTile.html)
-<template><div onclick={selectBoat} class={tileClass}>
+<template>
+  <div onclick={selectBoat} class={tileClass}>
     <div style={backgroundStyle} class="tile"></div>
     <div class="lower-third">
       <!-- Boat information goes here -->
     </div>
   </div>
 </template>
-
-Copy
-
 JavaScript file (boatTile.js)
 // imports
 export default class BoatTile extends LightningElement {
   boat;
   selectedBoatId;
-
+  
   // Getter for dynamically setting the background image for the picture
-  getbackgroundStyle() { }
-
+  get backgroundStyle() { }
+  
   // Getter for dynamically setting the tile class based on whether the
   // current boat is selected
-  gettileClass() { }
-
+  get tileClass() { }
+  
   // Fires event with the Id of the boat that has been selected.
-selectBoat() { }
+  selectBoat() { }
 }
-
-Copy
-
 CSS (boatTile.css)
 .tile {
   width: 100%;
@@ -310,20 +291,17 @@ CSS (boatTile.css)
   border-radius: 5px;
 }
 .selected {
-  border: 3px solidrgb(0, 95, 178);
+  border: 3px solid rgb(0, 95, 178);
   border-radius: 5px;
 }
 .tile-wrapper {
   cursor: pointer;
   padding: 5px;
 }
-
-Copy
-
 Build the Gallery
 The component boatSearchResults gets the data returned by getBoats(), which stores the search results in a component attribute boats through a wired function called wiredBoats(). Next, boatSearchResults loops through the results and displays each one as a boatTile, arranged in a responsive grid. Use a scoped <lightning-tabset> that’s only rendered if the attribute boats contains data to be displayed.
 
-https://developer.salesforce.com/files/superbadge_lwc/gallery.jpg
+Gallery with 8 boat records being displayed. The active tab is the Gallery.
 
 Use a <lightning-tab> labeled Gallery to display the boat tiles. Renata requested this gallery be scrollable, so create a <div> using the slds-scrollable_y class. Inside this <div>, create a <lightning-layout> that is horizontally aligned to the center, and allows multiple rows.
 
@@ -331,8 +309,12 @@ The component boatSearchResults loops through data returned by an Apex method an
 
 Display a <lightning-layout-item> using the boat Id as the key.
 Since Renata requested that the layout be responsive, apply the following properties to it:
-Untitled
-
+Property	Value
+Padding	"around-small"
+Standard size	"12"
+Size on small devices	"6"
+Size on medium devices	"4"
+Size on large devices	"3"
 This <lightning-layout-item> also contains each boat tile, passing both the currently selected boat Id and the information about the boat in each iteration, by using the custom event named boatselect created in the boatTile component.
 
 The info about the currently selected boat must be sent to other components, like the Current Boat Location and Details. In the boatSearchResults component, use the function updateSelectedTile() to update the information about the currently selected boat Id based on the event.
@@ -342,7 +324,7 @@ Don’t forget that this component must also use the existing loading spinner wh
 Boat Editor–Edit Boats En Masse!
 Byanca, Renata, and the engineering team came up with a solution where they can edit boat records in bulk. They need your help implementing this solution. It looks like this:
 
-https://developer.salesforce.com/files/superbadge_lwc/boat_editor.jpg
+Boat Editor in edit mode, with several changes in different boat records, ready to be saved. The changed values are highlighted with a yellow background. Unchanged values have a white background. The two available buttons are Cancel and Save. The active tab is the Boat Editor.
 
 There is a Boat Editor tab on the boatSearchResults component that displays a scrollable table (using a <div> with the same settings used for the gallery) with inline editing enabled. Here the user can edit the boat’s Name, Length, Price, and Description fields.
 
@@ -362,14 +344,16 @@ For this tab, add a new <lightning-tab> for Boats Near Me tab, using Boats Near 
 We check the requirements and snippets that are specific to boatsNearMe in a minute. For now, here is the code to use for the component boatSearchResults.
 
 Markup (boatSearchResults.html)
-<template><lightning-tabset ...>
+<template>
+  <lightning-tabset ...>
     <lightning-tab label="Gallery">
       <div class="slds-scrollable_y">
         <!-- layout horizontally aligned to the center  -->
         <!-- layout allowing multiple rows -->
         <lightning-layout ...>
           <!-- template looping through each boat -->
-          <template ...><!-- lightning-layout-item for each boat -->
+          <template ...>
+            <!-- lightning-layout-item for each boat -->
             <lightning-layout-item ...>
                <!-- Each BoatTile goes here -->
             </lightning-layout-item>
@@ -385,73 +369,66 @@ Markup (boatSearchResults.html)
     </lightning-tab>
   </lightning-tabset>
 </template>
-
-Copy
-
 JavaScript file (boatSearchResults.js)
 // ...
 const SUCCESS_TITLE = 'Success';
 const MESSAGE_SHIP_IT     = 'Ship it!';
 const SUCCESS_VARIANT     = 'success';
-const ERROR_TITLE   ='Error';
-const ERROR_VARIANT ='error';
+const ERROR_TITLE   = 'Error';
+const ERROR_VARIANT = 'error';
 export default class BoatSearchResults extends LightningElement {
   selectedBoatId;
   columns = [];
   boatTypeId = '';
   boats;
   isLoading = false;
-
+  
   // wired message context
   messageContext;
-  // wired getBoats method
-wiredBoats(result) { }
-
+  // wired getBoats method 
+  wiredBoats(result) { }
+  
   // public function that updates the existing boatTypeId property
   // uses notifyLoading
-searchBoats(boatTypeId) { }
-
+  searchBoats(boatTypeId) { }
+  
   // this public function must refresh the boats asynchronously
   // uses notifyLoading
-refresh() { }
-
+  refresh() { }
+  
   // this function must update selectedBoatId and call sendMessageService
-updateSelectedTile() { }
-
+  updateSelectedTile() { }
+  
   // Publishes the selected boat Id on the BoatMC.
-sendMessageService(boatId) {
+  sendMessageService(boatId) { 
     // explicitly pass boatId to the parameter recordId
   }
-
+  
   // The handleSave method must save the changes in the Boat Editor
-  // passing the updated fields from draftValues to the
+  // passing the updated fields from draftValues to the 
   // Apex method updateBoatList(Object data).
   // Show a toast message with the title
   // clear lightning-datatable draft values
-handleSave(event) {
+  handleSave(event) {
     // notify loading
     const updatedFields = event.detail.draftValues;
     // Update the records via Apex
-updateBoatList({data: updatedFields})
+    updateBoatList({data: updatedFields})
     .then(() => {})
     .catch(error => {})
     .finally(() => {});
   }
   // Check the current value of isLoading before dispatching the doneloading or loading custom event
-notifyLoading(isLoading) { }
+  notifyLoading(isLoading) { }
 }
-
-Copy
-
-https://res.cloudinary.com/hy4kyit2a/image/upload/doc/trailhead/en-usb473bb5ea1b7e61dfb07e6a7e547de6b.gif
-
+Note
 Note
 Previously, in order to enable inline editing for multiple rows, a developer could use the updateRecord method from uiRecordApi, with Promise.all(promises) causing each record update to occur in its own transaction. We're now using an approach with Apex in a pattern that is more scalable. More details in the documentation.
 
 Show the Boats on a Map
 Once they sign a lease, HowWeRoll clients need to know where to pick up the boats they’re leasing. For this task, deploy a mapping component to show the user where the boat docks. Also update the component to use the BoatMessageChannel__c titled BOATMC and events dispatched from anywhere in the application.
 
-https://developer.salesforce.com/files/superbadge_lwc/current_boat_location_arrow.jpg
+The component boatMap being displayed, showing the location of the currently selected boat. The boat is located on the bottom right side of the screen. The component title is Current Boat Location.
 
 The component boatMap and its JavaScript file were included in the unlocked package that you installed as part of the prework for this project, so you will be able to find it in your org. You only need to make a few adjustments.
 
@@ -472,11 +449,11 @@ We know that HowWeRoll Rentals has users around the globe. Renata and Byanca wan
 
 Here’s an example of how the results vary depending on the user’s location. For a user in South America:
 
-https://developer.salesforce.com/files/superbadge_lwc/map_south_america.jpg
+Boats Near Me displaying a map with ten map markers across South America. On the right side of the map, there is a list of all the markers, with the geolocation (latitude, longitude), and the boat’s name, including the current user’s location. The active tab is Boats Near Me.
 
 For a user in China or India:
 
-https://developer.salesforce.com/files/superbadge_lwc/map_asia.jpg
+Boats Near Me displaying a map with ten map markers across Asia. On the right side of the map, there is a list of all the markers, with the geolocation (latitude, longitude), and the boat’s name, including the current user’s location. The active tab is Boats Near Me.
 
 Well, you get the gist of it. Let’s think about it for a second. The implementation happens in three steps.
 
@@ -503,22 +480,20 @@ For the HTML portion, add a <lightning-spinner> inside a <template>, using Loadi
 Finally, invoke a <lightning-map> passing the mapMarkers, placing it right below the <lightning-spinner>.
 
 Markup (boatsNearMe.html)
-<template><lightning-card class="slds-is-relative">
+<template>
+  <lightning-card class="slds-is-relative">
      <!-- The template and lightning-spinner goes here -->
      <!-- The lightning-map goes here -->
      <div slot="footer">Top 10 Only!</div>
   </lightning-card>
 </template>
-
-Copy
-
 JavaScript file (boatsNearMe.js)
 
 // imports
 const LABEL_YOU_ARE_HERE = 'You are here!';
 const ICON_STANDARD_USER = 'standard:user';
 const ERROR_TITLE = 'Error loading Boats Near Me';
-const ERROR_VARIANT ='error';
+const ERROR_VARIANT = 'error';
 export default class BoatsNearMe extends LightningElement {
   boatTypeId;
   mapMarkers = [];
@@ -526,29 +501,26 @@ export default class BoatsNearMe extends LightningElement {
   isRendered;
   latitude;
   longitude;
-
+  
   // Add the wired method from the Apex Class
   // Name it getBoatsByLocation, and use latitude, longitude and boatTypeId
   // Handle the result and calls createMapMarkers
-wiredBoatsJSON({error, data}) { }
-
+  wiredBoatsJSON({error, data}) { }
+  
   // Controls the isRendered property
   // Calls getLocationFromBrowser()
-renderedCallback() { }
-
+  renderedCallback() { }
+  
   // Gets the location from the Browser
   // position => {latitude and longitude}
-getLocationFromBrowser() { }
-
+  getLocationFromBrowser() { }
+  
   // Creates the map markers
-createMapMarkers(boatData) {
+  createMapMarkers(boatData) {
      // const newMarkers = boatData.map(boat => {...});
      // newMarkers.unshift({...});
    }
 }
-
-Copy
-
 Now that you created the component boatsNearMe, don’t forget to instantiate it in the boatSearchResults.
 
 In the next section, you customize the Boat Details tab, to show the boat details and reviews.
@@ -562,7 +534,7 @@ This component must have a read-only mode that outputs the rating but is not cli
 
 The image on the left shows the fiveStarRating component in edit mode in the boatAddReviewForm component. The image on the right shows the fiveStarRating in read-only mode in the boatReviews component.
 
-https://developer.salesforce.com/files/superbadge_lwc/reviews_selected.jpg
+The component fiveStarRating in its two modes. On the left, in edit mode, placed into the addBoatReview component. On the right, the fiveStarRating in read-only mode, placed in the boatReviews component. The edit mode contains a form so the user can enter the Review Subject, the stars for the review rating, and a text editor where the user can enter the Review Comments. There’s a Submit button on the bottom. In read-only mode, the same information is displayed, as read-only fields. Order of the information being displayed: Reviewer name, Review date, Review Subject, Review Comments, Review stars (as starts).
 
 Create the Component
 Your newest component, fiveStarRating, has a public value property as well as a public readOnly property. Import the fivestar static resource and call it fivestar. Load the rating.css and rating.js files from the fivestar static resource using the loadScript() function.
@@ -578,7 +550,7 @@ Now that it’s clear which boat you’re viewing, and that we have a working co
 Display Boat Details
 It’s time to show details for the selected boat. Create a parent component boatDetailTabs that must be deployed on the top right sidebar of the Lightning page, above the boatMap component.
 
-https://developer.salesforce.com/files/superbadge_lwc/please_select_a_boat.jpg
+On the left, the component being displayed before any boat is selected. It shows a message: Please select a boat:). On the right, the component being displayed after a boat has been selected, showing details about the boat, like the boat name, type, length, price, description, and a button on the top right side of the details section, with the label Full Details. This button navigates to the full record on the Boat Record page.
 
 Renata is working with a localization team and, ideally, there would be one custom label for each text displayed to the users. She says creating new labels is something that will be decided internally. For now she requests that you use the existing custom labels. If no boat is selected yet, display a message asking the user to select a boat. Use a custom label for the message named Please_select_a_boat, inside a <span> aligned to the absolute center using SLDS, and no-boat-height, from the boatDetailTabs custom style.
 
@@ -608,16 +580,14 @@ Next, create two more tabs for the Boat Reviews. Inside a <lightning-tab> labele
 Inside a second <lightning-tab> labeled with the custom label Add_Review, instantiate the boatAddReviewForm component, passing the currently selected boat Id, using the function handleReviewCreated() to handle the custom event named createreview that you will later code inside the boatAddReviewForm component. The function handleReviewCreated() must set the <lightning-tabset> Reviews tab to active using querySelector() and activeTabValue, and refresh the boatReviews component dynamically.
 
 Markup (boatDetailTabs.html)
-<template><template if:false={wiredRecord.data}>
+<template>
+  <template if:false={wiredRecord.data}>
     <!-- lightning card for the label when wiredRecord has no data goes here  -->
   </template>
   <template if:true={wiredRecord.data}>
      <!-- lightning card for the content when wiredRecord has data goes here  -->
   </template>
 </template>
-
-Copy
-
 JavaScript file (boatDetailTabs.js)
 // Custom Labels Imports
 // import labelDetails for Details
@@ -639,41 +609,35 @@ export default class BoatDetailTabs extends LightningElement {
     labelFullDetails,
     labelPleaseSelectABoat,
   };
-
+  
   // Decide when to show or hide the icon
   // returns 'utility:anchor' or null
-  getdetailsTabIconName() { }
-
+  get detailsTabIconName() { }
+  
   // Utilize getFieldValue to extract the boat name from the record wire
-  getboatName() { }
-
+  get boatName() { }
+  
   // Private
   subscription = null;
-
+  
   // Subscribe to the message channel
-subscribeMC() {
+  subscribeMC() {
     // local boatId must receive the recordId from the message
   }
-
+  
   // Calls subscribeMC()
-connectedCallback() { }
-
+  connectedCallback() { }
+  
   // Navigates to record page
-navigateToRecordViewPage() { }
-
+  navigateToRecordViewPage() { }
+  
   // Navigates back to the review list, and refreshes reviews component
-handleReviewCreated() { }
+  handleReviewCreated() { }
 }
-
-Copy
-
 CSS (boatDetailTabs.css)
 .no-boat-height {
   height: 3rem;
 }
-
-Copy
-
 At this point, you can browse and filter boats, and view boat details. Next you add and display reviews, write secure JavaScript, integrate third-party scripts, and plot your boats on a map.
 
 Add Reviews to the Boats
@@ -684,7 +648,7 @@ Clicking the Submit button performs the following actions:
 Creates a new record in BoatReview__c (using Lightning Data Service)
 Displays a toast message that the submission was successful
 Activates the Reviews tab, showing the list of reviews (boatReviews component) for the selected boat
-https://developer.salesforce.com/files/superbadge_lwc/add_review.jpg
+The component boatReviewForm being displayed. The tab label is Add Review. It contains a form so the user can create a review, entering the Review Subject, the stars for the review rating, and a text editor where the user can enter the Review Comments. There’s a Submit button on the bottom.
 
 Build the Form
 The Add Review tab of the boatDetailTabs component instantiates a new component boatAddReviewForm, passing the selected boat’s Id as to the public setter named recordId. This setter must store the value of recordId into boatId.
@@ -697,8 +661,11 @@ Add the fiveStarRating component completed in the previous step to the form so t
 
 Use the following table for the field’s requirements.
 
-Untitled
-
+Field	API Name	Label	Schema import	Required?
+Boat	Boat__c	N/A: Field is not displayed to the user	N/A: Field is not displayed to the user	Yes. Based on the currently selected Boat Id.
+Name	Name	'Review Subject' in labelSubject	NAME_FIELD	Yes.
+Rating	Rating__c	'Rating' in labelRating	N/A: Field is handled by the fiveStarRating component	Yes. Default = 0.
+Comment	Comment__c	'Comment', inherited from the field	COMMENT_FIELD	Yes.
 The Submit button has Submit for the label, and it uses the utility:save icon. Display error messages above or below the form fields automatically.
 
 Create a New BoatReview Record
@@ -711,7 +678,8 @@ After the form successfully inserts the record, it calls a handleSuccess() funct
 This component also has a function called handleRatingChanged() that updates the private property rating every time the five-star rating is updated. The value of this property must be saved into Rating__c prior to the form submission.
 
 Markup (boatAddReviewForm.html)
-<template><!-- lightning data service code -->
+<template>
+  <!-- lightning data service code -->
   <!-- <lightning-record-edit-form> using boatReviewObject -->
     <lightning-layout multiple-rows vertical-align="start">
       <lightning-layout-item size="8" padding="horizontal-small">
@@ -736,9 +704,6 @@ Markup (boatAddReviewForm.html)
     </div>
   <!-- </lightning-record-edit-form> -->
 </template>
-
-Copy
-
 JavaScript file (boatAddReviewForm.js)
 // imports
 // import BOAT_REVIEW_OBJECT from schema - BoatReview__c
@@ -752,37 +717,34 @@ export default class BoatAddReviewForm extends LightningElement {
   nameField        = NAME_FIELD;
   commentField     = COMMENT_FIELD;
   labelSubject = 'Review Subject';
-  labelRating  ='Rating';
-
+  labelRating  = 'Rating';
+  
   // Public Getter and Setter to allow for logic to run on recordId change
-  getrecordId() { }
-  setrecordId(value) {
+  get recordId() { }
+  set recordId(value) {
     //sets boatId attribute
     //sets boatId assignment
   }
-
+  
   // Gets user rating input from stars component
-handleRatingChanged(event) { }
-
+  handleRatingChanged(event) { }
+  
   // Custom submission handler to properly set Rating
   // This function must prevent the anchor element from navigating to a URL.
   // form to be submitted: lightning-record-edit-form
-handleSubmit(event) { }
-
+  handleSubmit(event) { }
+  
   // Shows a toast message once form is submitted successfully
   // Dispatches event when a review is created
-handleSuccess() {
+  handleSuccess() {
     // TODO: dispatch the custom event and show the success message
     this.handleReset();
   }
-
+  
   // Clears form data upon submission
   // TODO: it must reset each lightning-input-field
-handleReset() { }
+  handleReset() { }
 }
-
-Copy
-
 Change the Tab Focus to the Reviews Tab
 Let’s piece it together. Earlier in this project you created a function named handleReviewCreated() inside the component boatDetailTabs, right? Good!
 
@@ -801,7 +763,7 @@ Develop a getter named reviewsToShow() that returns true if boatReviews is not n
 
 The boatReviews component defines an independently scrolling area using a Lightning component. If no reviews are found, it outputs the text No reviews available bound to the reviewsToShow() getter function. The text is absolutely positioned at the center within the scrollable region.
 
-https://developer.salesforce.com/files/superbadge_lwc/no_reviews.jpg
+The component boatReviews being displayed. The tab label is Reviews. There is only a message in the absolute center of the component: No reviews available.
 
 Then, add a second <div> below it that displays only if reviewsToShow() returns true. This <div> must use the following style classes to maintain the design suggested by Renata: slds-feed, reviews-style, slds-is-relative, slds-scrollable_y. (Make sure to remove the commas when copying these style classes!) This section holds all the content related to the reviews to be displayed.
 
@@ -815,8 +777,7 @@ Sometimes, you want to know more about the person leaving the review, so the Cre
 
 Create a <div> with the class slds-text-longform to receive the review subject inside a <p> with the class slds-text-title_caps, the review comment inside a <lightning-formatted-rich-text>, and the review rating, again using the fiveStarRating in read-only mode.
 
-https://developer.salesforce.com/files/superbadge_lwc/reviews.jpg
-
+The component boatReviews being displayed. The tab label is Reviews.The same information is displayed, as read-only fields. Order of the information being displayed for each review: Reviewer avatar, Reviewer name, Review date, Review Subject, Review Comments, Review stars (as stars).
 Make sure each boat review is inside an article, using slds-post for the class, and each article has a header, using slds-post__header slds-media for the class. This gives Renata the look and feel she’s looking for.
 
 This component also has a public function called refresh() which refreshes the list of reviews, calling getReviews().
@@ -824,10 +785,12 @@ This component also has a public function called refresh() which refreshes the l
 Those were a lot of details! I bet you’re excited to see the existing snippets you’re going to work with. Let’s take a look.
 
 Markup (boatReviews.html)
-<template><!-- div for when there are no reviews available -->
+<template>
+  <!-- div for when there are no reviews available -->
   <div>No reviews available</div>
   <!-- div for when there are reviews available -->
-  <div><!-- insert spinner -->
+  <div>
+  <!-- insert spinner -->
     <ul class="slds-feed__list">
       <!-- start iteration -->
         <li class="slds-feed__item" key={boatReview.Id}>
@@ -838,7 +801,8 @@ Markup (boatReviews.html)
               </div>
               <div class="slds-media__body">
                 <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
-                  <p><!-- display creator’s name -->
+                  <p>
+                      <!-- display creator’s name -->
                     <span><!-- display creator’s company name --></span>
                   </p>
                 </div>
@@ -858,9 +822,6 @@ Markup (boatReviews.html)
     </ul>
   </div>
 </template>
-
-Copy
-
 JavaScript file (boatReviews.js)
 // imports
 export default class BoatReviews extends LightningElement {
@@ -869,40 +830,34 @@ export default class BoatReviews extends LightningElement {
   error;
   boatReviews;
   isLoading;
-
+  
   // Getter and Setter to allow for logic to run on recordId change
-  getrecordId() { }
-  setrecordId(value) {
+  get recordId() { }
+  set recordId(value) {
     //sets boatId attribute
     //sets boatId assignment
     //get reviews associated with boatId
   }
-
+  
   // Getter to determine if there are reviews to display
-  getreviewsToShow() { }
-
+  get reviewsToShow() { }
+  
   // Public method to force a refresh of the reviews invoking getReviews
-refresh() { }
-
+  refresh() { }
+  
   // Imperative Apex call to get reviews for given boat
   // returns immediately if boatId is empty or null
   // sets isLoading to true during the process and false when it’s completed
   // Gets all the boatReviews from the result, checking for errors.
-getReviews() { }
-
+  getReviews() { }
+  
   // Helper method to use NavigationMixin to navigate to a given record on click
-navigateToRecord(event) {  }
+  navigateToRecord(event) {  }
 }
-
-Copy
-
 CSS (boatReviews.css)
 .reviews-style {
   max-height: 250px;
 }
-
-Copy
-
 Deploy the Component
 
 Instantiate the component in the boatAddReviewForm component and the boatReviews component in the boatDetailTabs.
@@ -912,7 +867,7 @@ It’s time for the final step on this journey! You’re almost there—but your
 Convert the Similar Boats Page to Lightning
 Weimar Williams, the Salesforce admin at HowWeRoll, informed you that there is a Visualforce page that needs to be converted to Lightning. It’s a page named SimilarBoats, and it uses a Visualforce component named SimilarBoatsComponent to show a list of boats that are similar to the one being displayed. A button that navigates to this page can be found on the Boat__c record page.
 
-https://developer.salesforce.com/files/superbadge_lwc/similarboats_button_page.jpg
+On the left, the Boat__c record page showing the Similar Boats button, that is placed on the upper right side of the screen. On the right, the Visualforce page SimilarBoats details about a Boat, and right below it, a list of similar boats, using the SimilarBoatsComponent.
 
 This Visualforce page must be used as an example to create a reusable Lightning web component called similarBoats.
 
@@ -920,11 +875,11 @@ Weimar wants you to empower admins to configure this component, so make the chan
 
 Notice the Lightning page named Boat_Record_Page included in the unlocked package. Perform the required adjustments in order to make sure the Current Boat Location component is on the right sidebar, showing the position of the current boat. Each instance of similarBoats is placed right below the Current Boat Location component.
 
-https://developer.salesforce.com/files/superbadge_lwc/boatrecordpage.jpg
+Boat Record Page showing the current boat details on the left, then the component Current Boat Location on the right side bar (top) and the Similar Boats on the right side bar (bottom), filtering the boats by Type.
 
 This is the right sidebar with the component similarBoats and the filters created in the metadata:
 
-https://developer.salesforce.com/files/superbadge_lwc/similarboats_properties.jpg
+Boat Record Page in edit mode, showing the three different properties the similar boats can be filtered by: Type, Price, Length.
 
 Each instance of this reusable component displays similar boats based on the parameter used. These similar boats are retrieved by an Apex method called getSimilarBoats, from the class BoatDataService. This method accepts the boat Id (boatId) and a String (similarBy) as parameters to query the similar boats. According to Byanca, the logic in the Apex method is already working as intended, so you don’t need to change it.
 
@@ -934,22 +889,28 @@ Note that this component is also reusing the boatTile and its existing behavior,
 
 Renata requested that the <lightning-layout-item> used to contain each boatTile also be responsive. So apply the following properties to it.
 
-Untitled
-
+Property	Value
+Padding	"around-small"
+Standard size	"12"
+Size on small devices	"6"
+Size on medium devices	"4"
+Size on large devices	"4"
 The responsive design must be able to change the tile and images sizes. Here’s one example of this component, showing similar boats by Type, but on an expanded browser window.
 
-https://developer.salesforce.com/files/superbadge_lwc/smiliarboats_lwc_component.jpg
+An instance of the component similarBoats, showing similar boats by Type, and the tiles are much larger, in width and length, being automatically resized by the applied style.
 
 Don’t forget to place the new similarBoats component on the record page three times, once for each property filter.
 
 Markup (similarBoats.html)
-<template><lightning-card title={getTitle} icon-name="custom:custom54">
+<template>
+  <lightning-card title={getTitle} icon-name="custom:custom54">
     <lightning-layout multiple-rows="true">
       <template if:true={noBoats}>
         <p class="slds-align_absolute-center">There are no related boats by {similarBy}!</p>
       </template>
       <!-- Loop through the list of similar boats -->
-      <template ...><!-- Responsive lightning-layout-item -->
+      <template ...>
+        <!-- Responsive lightning-layout-item -->
         <lightning-layout-item >
           <!-- Each boat tile goes here -->
         </lightning-layout-item>
@@ -957,9 +918,6 @@ Markup (similarBoats.html)
     </lightning-layout>
   </lightning-card>
 </template>
-
-Copy
-
 JavaScript file (similarBoats.js)
 // imports
 // import getSimilarBoats
@@ -969,33 +927,29 @@ export default class SimilarBoats extends LightningElement {
   relatedBoats;
   boatId;
   error;
-
+  
   // public
-  getrecordId() {
+  get recordId() {
       // returns the boatId
     }
-    setrecordId(value) {
+    set recordId(value) {
         // sets the boatId value
         // sets the boatId attribute
     }
-
+  
   // public
   similarBy;
-
+  
   // Wire custom Apex call, using the import named getSimilarBoats
   // Populates the relatedBoats list
-similarBoats({ error, data }) { }
-  getgetTitle() {
+  similarBoats({ error, data }) { }
+  get getTitle() {
     return 'Similar boats by ' + this.similarBy;
   }
-  getnoBoats() {
+  get noBoats() {
     return !(this.relatedBoats && this.relatedBoats.length > 0);
   }
-
+  
   // Navigate to record page
-openBoatDetailPage(event) { }
+  openBoatDetailPage(event) { }
 }
-
-Copy
-
-That’s it! You've made it! Stow your anchor, turn off the lights, lock the boat’s door, and congratulate yourself on a great experience.
