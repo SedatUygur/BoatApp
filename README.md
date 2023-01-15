@@ -3,7 +3,7 @@
 
 Created by Sedat Can Uygur
 
-[Github](https://github.com/SedatUygur) | [FreeCodeCamp](http://www.freecodecamp.com/pcengineer48) | [CodePen](http://codepen.io/SedatUygur) | [LinkedIn](https://www.linkedin.com/in/sedat-can-uygur) | [E-Mail](mailto:sedatcan_92@hotmail.com)
+[Github](https://github.com/SedatUygur) | [FreeCodeCamp](http://www.freecodecamp.com/pcengineer48) | [CodePen](http://codepen.io/SedatUygur) | [LinkedIn](https://www.linkedin.com/in/sedat-can-uygur) | [E-Mail](mailto:sedat.uygur@outlook.com)
 
 
 Salesforce DX Project: Next Steps
