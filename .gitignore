@@ -41,11 +41,12 @@ $RECYCLE.BIN/
 
 .husky/
 .vscode/
-config/
 .eslintignore
 .forceignore
 .prettierignore
 .prettierrc
+config/
+scripts/
 jest.config.js
 
 # Local environment variables
